@@ -1,0 +1,1 @@
+const customSearchKey = require('./gcpSecret');
