@@ -1,0 +1,14 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend for PriceCheck",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zi Gao (zgao28)",
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^32.0.0"
+  }
+}
