@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "backend for PriceCheck",
   "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zgao28/PriceChecker.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Zi Gao (zgao28)",
   "license": "ISC",
   "dependencies": {
-    "googleapis": "^32.0.0"
+    "firebase": "^5.2.0",
+    "googleapis": "^32.0.0",
+    "nodemailer": "^4.6.7"
   }
 }
