@@ -12,8 +12,10 @@ async function search(query) {
         auth: GOOGLE_SEARCH_KEY
     });
 
-    console.log(results.data);
+    return results.data;
 }
 
-search('cars');
+module.exports.search = search;
+
+
 

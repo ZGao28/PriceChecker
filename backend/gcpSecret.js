@@ -6,5 +6,10 @@ var firebaseConfig = {
     storageBucket: "pricecheck-1531869468193.appspot.com",
     messagingSenderId: "379490331913"
 }
+var customSearchKey = 'AIzaSyBSQU2AkEcCR-M_HR0UKubA7iiBzm8NBMs';
+var customSearchEngineID = '010727462276892999876:o71imcm8peo';
 
 module.exports.firebaseConfig = firebaseConfig;
+module.exports.customSearchKey = customSearchKey;
+module.exports.customSearchEngineID = customSearchEngineID;
+
