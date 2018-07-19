@@ -11,7 +11,6 @@ async function search(query) {
         q: query,
         auth: GOOGLE_SEARCH_KEY
     });
-
     return results.data;
 }
 
