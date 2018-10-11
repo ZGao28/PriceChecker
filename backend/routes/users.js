@@ -17,7 +17,7 @@ const userSchema = joi.object().keys({
 });
 
 // POST request for user registration
-router.post('/register', function(req, res){
+router.post('/register', (req, res) => {
 
     // validate request
     let validated = joi.validate(req.body, userSchema);
@@ -38,13 +38,15 @@ router.post('/register', function(req, res){
     User.findOne(query, (err, user) => {
         //make sure there is no error and user with specified username exists
         if (!user) {
-            bcrypt.genSalt(10, function(err, salt){
-                bcrypt.hash(newUser.password, salt, function(err, hash){
+            // generate salt
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
                     if(err){
                         console.log(err);
                     }
+                    // set new user password to hash
                     newUser.password = hash;
-                    newUser.save(function(err){
+                    newUser.save((err) => {
                         if(err){
                             console.log(err);
                             return;
@@ -60,16 +62,26 @@ router.post('/register', function(req, res){
     });
 });
 
-// POST request for user login
-router.post('/login', 
-    passport.authenticate('local'),
-    function(req, res) {
-        // If this function gets called, authentication was successful.
-        // `req.user` contains the authenticated user.
-        res.redirect('/users/' + req.user.username);
+// POST request for login
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', {
+      successRedirect:'/',
+      failureRedirect:'/users/login'
+    })(req, res, next);
 });
+  
+
+// GET request for user registration
+router.get('/register', (req, res)=> { res.render('register') });
 
 // GET request for login page
 router.get('/login', (req, res) => { res.render('login') });
+
+
+// GET request for logout
+router.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/users/login');
+});
   
 module.exports = router;

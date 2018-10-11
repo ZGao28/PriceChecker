@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoCredentials = require('./config/mongoCredentials');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
@@ -34,13 +35,27 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// Express Session Middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+}));
+  
+
 // Passport Middleware stuff
 require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+app.get('*', function(req, res, next){
+    res.locals.user = req.user || null;  
+    next();
+});
+  
+
 
 // Home Route
-app.get('/', (req, res) => { res.render('register'); });
+app.get('/', (req, res) => { res.render('index'); });
 
 // Route Files
 let users = require('./routes/users');
