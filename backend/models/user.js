@@ -1,19 +1,16 @@
-// require joi for schema validation
-const joi = require('joi');
 
+const mongoose = require('mongoose');
 
-// create User object 
+// User Schema
+const UserSchema = mongoose.Schema({
+  email:{
+    type: String,
+    required: true
+  },
+  password:{
+    type: String,
+    required: true
+  }
+});
 
-const User = module.exports = {
-    
-
-    // register user function
-    registerUser: () => {
-
-    },
-    // schema for user
-    schema: joi.object().keys({
-        shopname: joi.string().required(),
-        description: joi.string().required() 
-    })
-}
+const User = module.exports = mongoose.model('User', UserSchema);
