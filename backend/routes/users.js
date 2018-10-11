@@ -10,8 +10,10 @@ let User = require('../models/user');
 
 // Define user schemas - could later use joigoose, but just use joi and mongoose seperately for now
 const userSchema = joi.object().keys({
+    username: joi.string().required(),
     email: joi.string().email().required(),
-    password: joi.string().required() 
+    password: joi.string().required(),
+    currency: joi.string().required() 
 });
 
 // POST request for user registration
@@ -26,8 +28,10 @@ router.post('/register', function(req, res){
 
     //create new user object
     let newUser = new User({
+        username: body.username,
         email: body.email,
-        password: body.password
+        password: body.password,
+        currency: body.currency
     });
 
     bcrypt.genSalt(10, function(err, salt){
@@ -48,25 +52,14 @@ router.post('/register', function(req, res){
     });
 });
 
-// Login Form
-router.get('/login', function(req, res){
-  res.render('login');
+// POST request for user login
+router.post('/login', 
+    passport.authenticate('local'),
+    function(req, res) {
+        // If this function gets called, authentication was successful.
+        // `req.user` contains the authenticated user.
+        res.redirect('/users/' + req.user.username);
 });
-
-// Login Process
-router.post('/login', function(req, res, next){
-  passport.authenticate('local', {
-    successRedirect:'/',
-    failureRedirect:'/users/login',
-    failureFlash: true
-  })(req, res, next);
-});
-
-// logout
-router.get('/logout', function(req, res){
-  req.logout();
-  req.flash('success', 'You are logged out');
-  res.redirect('/users/login');
-});
+  
 
 module.exports = router;

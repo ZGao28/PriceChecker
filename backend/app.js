@@ -1,9 +1,9 @@
 // porting in modules and other dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
-const mongoCredentials = require('./mongoCredentials');
-let db
+const mongoCredentials = require('./config/mongoCredentials');
+const mongoose = require('mongoose');
+const passport = require('passport');
 
 // Express setup stuff
 const app = express();
@@ -11,20 +11,40 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // Route Files
-let articles = require('./routes/items');
+//let items = require('./routes/items');
 let users = require('./routes/users');
-app.use('/articles', articles);
+//app.use('/items', items);
 app.use('/users', users);
 
 
-MongoClient.connect(`mongodb+srv://${mongoCredentials.mongoID}:${mongoCredentials.mongoPassword}@projects-ccy41.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true }, (err, client) => {
-    if (err) {
-        console.log('Error Connecting to Database \n'); 
-        return err;
-    }
-    // Use db PriceCheck
-    db = client.db('PriceCheck');
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
 });
+
+
+
+// Connect mongoose
+mongoose.connect(`mongodb+srv://${mongoCredentials.mongoID}:${mongoCredentials.mongoPassword}@projects-ccy41.mongodb.net/pricecheck?retryWrites=true`, { useNewUrlParser: true });
+let db = mongoose.connection;
+
+
+// Check connection
+db.once('open', () => {
+    console.log('Successfully Connected to MongoDB');
+});
+
+// Check for DB errors
+db.on('error', (err) => {
+    console.log(err);
+});
+
+
 
 
 //start app
