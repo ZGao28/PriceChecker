@@ -34,21 +34,29 @@ router.post('/register', function(req, res){
         currency: body.currency
     });
 
-    bcrypt.genSalt(10, function(err, salt){
-        bcrypt.hash(newUser.password, salt, function(err, hash){
-            if(err){
-                console.log(err);
-            }
-            newUser.password = hash;
-            newUser.save(function(err){
-                if(err){
-                    console.log(err);
-                    return;
-                } else {
-                    res.redirect('/users/login');
-                }
+    let query = {username:body.username};
+    User.findOne(query, (err, user) => {
+        //make sure there is no error and user with specified username exists
+        if (!user) {
+            bcrypt.genSalt(10, function(err, salt){
+                bcrypt.hash(newUser.password, salt, function(err, hash){
+                    if(err){
+                        console.log(err);
+                    }
+                    newUser.password = hash;
+                    newUser.save(function(err){
+                        if(err){
+                            console.log(err);
+                            return;
+                        } else {
+                            res.redirect('/users/login');
+                        }
+                    });
+                });
             });
-        });
+        } else {
+            res.send('\n Username already exists! \n');
+        }
     });
 });
 
@@ -60,6 +68,8 @@ router.post('/login',
         // `req.user` contains the authenticated user.
         res.redirect('/users/' + req.user.username);
 });
-  
 
+// GET request for login page
+router.get('/login', (req, res) => { res.render('login') });
+  
 module.exports = router;

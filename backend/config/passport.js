@@ -10,7 +10,6 @@ module.exports = function(passport){
         User.findOne(query, (err, user) => {
             //make sure there is no error and user with specified username exists
             if(err) throw err;
-            console.log('some');
             if(!user) return done(null, false, {message: 'No user found'});
             
             // Match Password using bcrypt
