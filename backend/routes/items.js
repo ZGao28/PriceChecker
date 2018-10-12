@@ -8,7 +8,6 @@ let Item = require('../models/item');
 
 // Define item schemas - could later use joigoose, but just use joi and mongoose seperately for now
 const itemSchema = joi.object().keys({
-    username: joi.string().required(),
     desiredPrice: joi.number().required(),
     itemName: joi.string().required(),
     currency: joi.string().required()
@@ -16,7 +15,6 @@ const itemSchema = joi.object().keys({
 
 const deleteItemSchema = joi.object().keys({
     itemName: joi.string().required(),
-    username: joi.string().required()
 });
 
 // POST request for creating item
@@ -29,11 +27,18 @@ router.post('/addItem', (req, res) => {
     }
     let body = validated.value;
 
+    // check if user is authenticated
+    
+    if (!req.isAuthenticated()){
+        return res.redirect('/users/login');
+    }
+    
+
     //create new item object
     let newItem = new Item({
-        // replace the itemID with more effective hash! 
-        itemID: `user-${body.username}-item-${body.itemName}`,
-        userID: body.username,
+        // replace the itemID with more effective hash!
+        itemID: `user-${req.user.username}-item-${body.itemName}`,
+        userID: req.user.username,
         desiredPrice: body.desiredPrice,
         currency: body.currency,
         lowestPrice: 1000000000,
@@ -42,22 +47,14 @@ router.post('/addItem', (req, res) => {
     });
 
     let query = {itemID:newItem.itemID};
+    
     Item.findOne(query, (err, item) => {
         //make sure there is no error and item with specified item name does not already exist
         if (!item) {
-            newItem.save((err) => {
-                if(err){
-                    console.log(err);
-                    return;
-                } else {
-                    res.redirect('/');
-                }
-            });
-        } else {
-            res.send('\n You already have that item already on your list! \n');
+            newItem.save();
         }
     });
-
+    
     res.redirect('/');
 });
 
@@ -70,9 +67,15 @@ router.post('/deleteItem', (req, res) => {
         throw new Error(validated.error.message);
     }
 
+    // check if user is authenticated
+    if (!req.isAuthenticated()){
+        return res.redirect('/users/login');
+    }
+
     // create query using itemID made by username and itemname (need to replace with proper hash)
+    // with req.user.username only people who are logged in can change their own items list
     let body = validated.value;
-    let query = {itemID: `user-${body.username}-item-${body.itemName}`};
+    let query = {itemID: `user-${req.user.username}-item-${body.itemName}`};
 
     // delete item from database
     Item.deleteOne(query, (err, res) => {
@@ -82,5 +85,11 @@ router.post('/deleteItem', (req, res) => {
     res.redirect('/');
 
 });
-  
+
+// GET request for addItem form 
+router.get('/addItem', (req, res) => {
+    res.render('addItem');
+});
+
+
 module.exports = router;

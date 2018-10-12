@@ -1,12 +1,9 @@
 extends layout
 
 block content
-  if user
-    if user.id ==item.userID
-      h1= item.productName
-      p= item.currentPrice
-      p= item.desiredPrice
-      a= item.url
-      hr
-      a.btn.btn-danger.delete-item(href='#',data-id=item._id) Delete
+  h1= item.productName
+  p= item.currentPrice
+  p= item.desiredPrice
+  a= item.url
+  hr
 

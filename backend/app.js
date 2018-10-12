@@ -6,7 +6,7 @@ const mongoCredentials = require('./config/mongoCredentials');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
-
+const Item = require('./models/item');
 
 // Connect mongoose
 mongoose.connect(`mongodb+srv://${mongoCredentials.mongoID}:${mongoCredentials.mongoPassword}@projects-ccy41.mongodb.net/pricecheck?retryWrites=true`, { useNewUrlParser: true });
@@ -55,7 +55,22 @@ app.get('*', function(req, res, next){
 
 
 // Home Route
-app.get('/', (req, res) => { res.render('index'); });
+app.get('/', (req, res) => {
+    if (!req.isAuthenticated()){
+        return res.redirect('/users/login');
+    } 
+    Item.find({userID: req.user.username}, (err, items) => {
+        console.log(items);
+        if(err){
+            console.log(err);
+        } else {
+            res.render('index', {
+                title:'Items',
+                items: items
+            });
+        }
+    });
+});
 
 // Route Files
 let items = require('./routes/items');

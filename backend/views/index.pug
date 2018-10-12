@@ -5,5 +5,8 @@ block content
 
   if user
     p Logged In as #{user.username}! Here are your items.
+    ul.list-group
+    each item, i in items
+      p #{item}
   else
     p Please Login
