@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 
 // Define item Schema
 const ItemSchema = mongoose.Schema({
+  itemID: {
+    type: String,
+    required: true
+  },
   itemName:{
     type: String,
     required: true
