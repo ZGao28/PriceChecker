@@ -58,8 +58,10 @@ app.get('*', function(req, res, next){
 app.get('/', (req, res) => { res.render('index'); });
 
 // Route Files
+let items = require('./routes/items');
 let users = require('./routes/users');
 app.use('/users', users);  
+app.use('/items', items);
 
 //start app
 app.listen(3000, '127.0.0.1', () => {console.log('Server is up and running on PORT 3000!')});
