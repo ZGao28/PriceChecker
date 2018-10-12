@@ -97,7 +97,7 @@ router.get('/alexa', (req, res) => {
     let query = {userID: 'daniel'}
     Item.find(query, (err, items) => {
         if(err) throw new Error(err);
-        res.send(items);
+        res.send(JSON.stringify(items));
     });
 });
 
