@@ -1,3 +1,3 @@
 node_modules
 .next
-backend/mongoCredentials.js
+backend/config/mongoCredentials.js
