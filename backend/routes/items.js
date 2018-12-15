@@ -94,7 +94,7 @@ router.get('/addItem', (req, res) => {
 // GET request for special ALEXA! - some sort of auth later on would be nice
 router.get('/alexa', (req, res) => {
     // have to manually give id
-    let query = {userID: 'daniel'}
+    let query = {userID: 'zgao28'}
     Item.find(query, (err, items) => {
         if(err) throw new Error(err);
         res.send(JSON.stringify(items));

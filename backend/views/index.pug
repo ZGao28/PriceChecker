@@ -4,9 +4,17 @@ block content
   h1 #{title}
 
   if user
-    p Logged In as #{user.username}! Here are your items.
+    br 
+    p Hi #{user.username}, are your items!
     ul.list-group
     each item, i in items
-      p #{item}
+      div.panel.panel-default
+        br
+        p Item Name: #{item.itemName}
+        p Lowest Price: #{item.lowestPrice}
+        p Desired Price: #{item.desiredPrice}
+        p Currency: #{item.currency}
+        br
+
   else
     p Please Login
